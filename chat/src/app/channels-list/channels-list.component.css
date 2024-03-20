@@ -1,0 +1,12 @@
+#channelsListContainer {
+    text-align: center;
+}
+
+h2 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+ul {
+    list-style: none;
+}

@@ -1,0 +1,13 @@
+<div id="channelsListContainer">
+    <h2>Channels</h2>
+
+    <ul>
+        <li *ngFor="let channel of channels" >
+            <button (click)="onSelect(channel)" 
+            class="btn btn-outline-primary rounded-0 col-12" 
+            [ngClass]="channel.selected ? 'active' : ''">
+                {{channel.name}}
+            </button>
+        </li>
+    </ul>
+</div>
