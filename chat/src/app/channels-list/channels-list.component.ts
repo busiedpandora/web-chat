@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { Channel } from '../channel';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
+import { Output } from '@angular/core';
 
 @Component({
   selector: 'app-channels-list',
@@ -17,6 +18,7 @@ export class ChannelsListComponent {
 
   selectedChannel : Channel | null = null;
 
+  @Output() selectedChannelId = new EventEmitter<number>();
 
   constructor(private http: HttpClient) {
     this.initChannels(); 
@@ -39,6 +41,7 @@ export class ChannelsListComponent {
         }
 
         this.selectedChannel = this.channels[0];
+        this.selectedChannelId.emit(this.selectedChannel.id);
 
       }, (error) => {
         console.error('Error:', error);
@@ -50,6 +53,7 @@ export class ChannelsListComponent {
       this.selectedChannel.selected = false;
       this.selectedChannel = channel;
       this.selectedChannel.selected = true;
+      this.selectedChannelId.emit(this.selectedChannel.id);
     }
   }
 }
