@@ -18,7 +18,7 @@ export class ChannelsListComponent {
 
   selectedChannel : Channel | null = null;
 
-  @Output() selectedChannelId = new EventEmitter<number>();
+  @Output() selectChannelEvent = new EventEmitter<Channel>();
 
   constructor(private http: HttpClient) {
     this.initChannels(); 
@@ -41,7 +41,7 @@ export class ChannelsListComponent {
         }
 
         this.selectedChannel = this.channels[0];
-        this.selectedChannelId.emit(this.selectedChannel.id);
+        this.selectChannelEvent.emit(this.selectedChannel);
 
       }, (error) => {
         console.error('Error:', error);
@@ -53,7 +53,7 @@ export class ChannelsListComponent {
       this.selectedChannel.selected = false;
       this.selectedChannel = channel;
       this.selectedChannel.selected = true;
-      this.selectedChannelId.emit(this.selectedChannel.id);
+      this.selectChannelEvent.emit(this.selectedChannel);
     }
   }
 }

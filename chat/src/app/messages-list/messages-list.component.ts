@@ -5,6 +5,7 @@ import { NgFor } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
+import { Channel } from '../channel';
 
 @Component({
   selector: 'app-messages-list',
@@ -15,18 +16,18 @@ import { Input } from '@angular/core';
 })
 export class MessagesListComponent {
   messages: Message[] = [];
-  @Input() channelId: number;
+  @Input() channel: Channel;
 
   constructor(private http: HttpClient) { }
 
   ngOnChanges() {
-    if (this.channelId != undefined) {
+    if (this.channel != undefined) {
       this.initMessages();
     }
   }
 
   initMessages() {
-    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/' + this.channelId + '/messages?apiKey=Giamboni_Ibrahim')
+    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/' + this.channel.id + '/messages?apiKey=Giamboni_Ibrahim')
       .subscribe((response: any) => {
         const messagesJson: any[] = response;
 

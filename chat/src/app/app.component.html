@@ -2,10 +2,10 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-2">
-        <app-channels-list (selectedChannelId) = "onChannelSelected($event)"></app-channels-list>
+        <app-channels-list (selectChannelEvent) = "onChannelSelected($event)"></app-channels-list>
       </div>
       <div class="col">
-        <app-messages-list [channelId] = "selectedChannelId"></app-messages-list>
+        <app-messages-list [channel] = "selectedChannel"></app-messages-list>
       </div>
     </div>
   </div>

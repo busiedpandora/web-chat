@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { ChannelsListComponent } from './channels-list/channels-list.component'
 import { CommonModule } from '@angular/common';
 import { MessagesListComponent } from './messages-list/messages-list.component'
+import { Channel } from './channel';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +14,9 @@ import { MessagesListComponent } from './messages-list/messages-list.component'
 })
 export class AppComponent {
   title = 'chat';
-  selectedChannelId: number;
+  selectedChannel: Channel;
   
-  onChannelSelected(channelId : number){
-    this.selectedChannelId = channelId;
+  onChannelSelected(channel : Channel){
+    this.selectedChannel = channel;
   }
 }
