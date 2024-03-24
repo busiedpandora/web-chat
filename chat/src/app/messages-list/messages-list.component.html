@@ -1,9 +1,10 @@
 <div id="messagesListContainer">
     <ul>
         <li *ngFor="let message of messages" >
-            {{message.body}}
+            <app-message [message] = message></app-message>
         </li>
     </ul>
+    
 </div>
 
 

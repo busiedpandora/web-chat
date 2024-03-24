@@ -6,11 +6,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { Channel } from '../channel';
+import { MessageComponent } from './message/message.component';
 
 @Component({
   selector: 'app-messages-list',
   standalone: true,
-  imports: [CommonModule, NgFor, HttpClientModule],
+  imports: [CommonModule, NgFor, HttpClientModule, MessageComponent],
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css'
 })
@@ -48,9 +49,15 @@ export class MessagesListComponent {
           this.messages[i] = message;
         }
 
+        this.sortMessagesByDate();
+
       }, (error) => {
         console.error('Error:', error);
       });
+  }
+
+  sortMessagesByDate() {
+    this.messages.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 }
 
