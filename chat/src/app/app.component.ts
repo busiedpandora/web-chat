@@ -15,8 +15,14 @@ import { Channel } from './channel';
 export class AppComponent {
   title = 'chat';
   selectedChannel: Channel;
+  showChannelsList: boolean = true;
   
+
   onChannelSelected(channel : Channel){
     this.selectedChannel = channel;
+  }
+
+  onChannelsLoaded(showChannelsList : boolean) {
+    this.showChannelsList = showChannelsList;
   }
 }

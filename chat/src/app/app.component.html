@@ -1,8 +1,8 @@
 <main class="main">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-2">
-        <app-channels-list (selectChannelEvent) = "onChannelSelected($event)"></app-channels-list>
+      <div class="col-2" *ngIf="showChannelsList">
+        <app-channels-list (selectChannelEvent) = "onChannelSelected($event)" (channelsLoadedEvent)="onChannelsLoaded($event)"></app-channels-list>
       </div>
       <div class="col">
         <app-messages-list [channel] = "selectedChannel"></app-messages-list>

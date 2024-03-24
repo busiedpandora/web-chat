@@ -20,6 +20,8 @@ export class ChannelsListComponent {
 
   @Output() selectChannelEvent = new EventEmitter<Channel>();
 
+  @Output() channelsLoadedEvent = new EventEmitter<boolean>();
+
   constructor(private http: HttpClient) {
     this.initChannels(); 
   }
@@ -42,6 +44,8 @@ export class ChannelsListComponent {
 
         this.selectedChannel = this.channels[0];
         this.selectChannelEvent.emit(this.selectedChannel);
+
+        this.channelsLoadedEvent.emit(this.channels.length > 1);
 
       }, (error) => {
         console.error('Error:', error);
