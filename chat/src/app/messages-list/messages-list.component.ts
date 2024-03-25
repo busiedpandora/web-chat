@@ -18,6 +18,7 @@ import { AppConfig } from '../../config';
 })
 export class MessagesListComponent {
   apiKey: string;
+  authorRegistered: string;
   @Input() channel: Channel;
   messages: Message[] = [];
   
@@ -26,6 +27,7 @@ export class MessagesListComponent {
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
+    this.authorRegistered = AppConfig.authorRegistered;
   }
 
   ngOnChanges() {
