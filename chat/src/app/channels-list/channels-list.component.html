@@ -1,10 +1,10 @@
 <div id="channelsListContainer">
-    <h2>Channels</h2>
+    <h1>Channels</h1>
 
     <ul>
         <li *ngFor="let channel of channels" >
             <button (click)="onSelect(channel)" 
-            class="btn btn-outline-primary rounded-0 col-12" 
+            class="btn btn-outline-primary rounded-0 border-start-0 border-end-0 col-12 fs-3" 
             [ngClass]="channel.selected ? 'active' : ''">
                 {{channel.name}}
             </button>

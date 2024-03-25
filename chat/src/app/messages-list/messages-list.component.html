@@ -1,4 +1,5 @@
 <div id="messagesListContainer">
+    <h1 id="channelName" class="text-center text-primary">{{channel.name}}</h1>
     <ul>
         <li *ngFor="let message of messages" >
             <app-message [message] = message></app-message>
