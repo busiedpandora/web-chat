@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { Channel } from '../channel';
 import { MessageComponent } from './message/message.component';
+import { AppConfig } from '../../config';
 
 @Component({
   selector: 'app-messages-list',
@@ -16,10 +17,18 @@ import { MessageComponent } from './message/message.component';
   styleUrl: './messages-list.component.css'
 })
 export class MessagesListComponent {
-  messages: Message[] = [];
+  apiKey: string;
+  authorRegistered: string;
   @Input() channel: Channel;
+  messages: Message[] = [];
+  
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.apiKey = AppConfig.apiKey;
+    this.authorRegistered = AppConfig.authorRegistered;
+  }
 
   ngOnChanges() {
     if (this.channel != undefined) {
@@ -28,7 +37,7 @@ export class MessagesListComponent {
   }
 
   initMessages() {
-    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/' + this.channel.id + '/messages?apiKey=Giamboni_Ibrahim')
+    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/' + this.channel.id + '/messages?apiKey=' + this.apiKey)
       .subscribe((response: any) => {
         const messagesJson: any[] = response;
 
