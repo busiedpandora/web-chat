@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { MessagesListComponent } from '../messages-list/messages-list.component'
 import { Channel } from '../channel';
 import { Input } from '@angular/core';
+import { SendMessageComponent } from '../send-message/send-message.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, ChannelsListComponent, MessagesListComponent],
+  imports: [RouterOutlet, CommonModule, ChannelsListComponent, MessagesListComponent, SendMessageComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })

@@ -1,12 +1,12 @@
 export class Message {
     private _id: number;
-    private _parentMessageId: number;
+    private _parentMessageId: number | null;
     private _body: string;
     private _author: string;
     private _date: Date;
     private _lastEditTime: Date;
     private _channelId: number;
-    private _attachmentId: number;
+    private _attachment: File | null;
 
     get id(): number {
         return this._id;
@@ -16,11 +16,11 @@ export class Message {
         this._id = value;
     }
 
-    get parentMessageId(): number {
+    get parentMessageId(): number | null {
         return this._parentMessageId;
     }
 
-    set parentMessageId(value: number) {
+    set parentMessageId(value: number | null) {
         this._parentMessageId = value;
     }
 
@@ -64,11 +64,11 @@ export class Message {
         this._channelId = value;
     }
 
-    get attachmentId(): number {
-        return this._attachmentId;
+    get attachment(): File | null {
+        return this._attachment;
     }
 
-    set attachmentId(value: number) {
-        this._attachmentId = value;
+    set attachment(value: File | null) {
+        this._attachment = value;
     }
 }

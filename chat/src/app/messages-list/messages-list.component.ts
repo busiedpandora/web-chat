@@ -54,7 +54,7 @@ export class MessagesListComponent {
           message.date = messageJson.date;
           message.lastEditTime = messageJson.lastEditTime;
           message.channelId = messageJson.channelId;
-          message.attachmentId = messageJson.attachmentId;
+          message.attachment = messageJson.attachment;
 
           this.messages[i] = message;
         }
