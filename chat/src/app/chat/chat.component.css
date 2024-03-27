@@ -1,0 +1,12 @@
+.container-fluid {
+    border: 10px solid #0d6efd;
+}
+
+.col {
+    padding: 0;
+}
+
+.col-2 {
+    padding: 0;
+    border-right: 10px solid #0d6efd;
+}

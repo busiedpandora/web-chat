@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Message } from '../../message';
+import { Message } from '../message';
 import { Input } from '@angular/core';
 import { NgIf } from '@angular/common';
 

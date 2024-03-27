@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { Channel } from '../channel';
-import { MessageComponent } from './message/message.component';
+import { MessageComponent } from '../message/message.component';
 import { AppConfig } from '../../config';
 
 @Component({
@@ -18,16 +18,17 @@ import { AppConfig } from '../../config';
 })
 export class MessagesListComponent {
   apiKey: string;
-  authorRegistered: string;
+  //authorRegistered: string;
   @Input() channel: Channel;
   messages: Message[] = [];
+  @Input() authorRegistered: string;
   
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
-    this.authorRegistered = AppConfig.authorRegistered;
+    //this.authorRegistered = AppConfig.authorRegistered;
   }
 
   ngOnChanges() {
