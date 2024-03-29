@@ -1,0 +1,10 @@
+<div id="searchMessageContainer">
+        <form class="row">
+            <div class="col-md-10">
+                <input type="text" class="form-control" placeholder="Search..." #filterChat>
+            </div>
+            <div class="col-md-1">
+                <button class="primary" type="button" (click)="postFilter(filterChat.value)">Search</button>
+            </div>
+        </form>
+</div>

@@ -22,9 +22,10 @@ export class MessagesListComponent {
   @Input() channel: Channel;
   messages: Message[] = [];
   @Input() authorRegistered: string;
-  
+  @Input() filterFromChat: string;
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
@@ -34,6 +35,22 @@ export class MessagesListComponent {
   ngOnChanges() {
     if (this.channel != undefined) {
       this.initMessages();
+    }
+  }
+
+  OnChanges(){
+    if (this.filterFromChat != undefined && this.filterFromChat.trim().length !== 0) {
+
+      let filteredMessages: Message[] = [];
+
+      filteredMessages = this.messages.filter(message => message.author.includes(this.filterFromChat) || message.body.includes(this.filterFromChat));
+
+      this.messages = [];
+
+      filteredMessages.forEach((message: any) =>{
+        this.messages.push(message);
+      })
+
     }
   }
 

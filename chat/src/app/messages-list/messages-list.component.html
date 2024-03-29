@@ -1,5 +1,6 @@
 <div id="messagesListContainer">
     <h1 id="channelName" class="text-center text-primary">{{channel != null ? channel.name : ''}}</h1>
+    <span>{{OnChanges()}}</span>
     <ul>
         <div *ngFor="let message of messages">
             <li class="d-flex"

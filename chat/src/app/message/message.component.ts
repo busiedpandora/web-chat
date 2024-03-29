@@ -13,7 +13,6 @@ import { NgIf } from '@angular/common';
 export class MessageComponent {
   @Input() message : Message;
 
-
   formatDate(date : Date) {
     let formattedDate = date.toLocaleString(
       'it-CH', { 

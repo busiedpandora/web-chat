@@ -4,7 +4,8 @@
         <app-channels-list (selectChannelEvent) = "onChannelSelected($event)" (channelsLoadedEvent)="onChannelsLoaded($event)"></app-channels-list>
       </div>
       <div class="col">
-        <app-messages-list [channel] = "selectedChannel" [authorRegistered]="author"></app-messages-list>
+        <app-search-message (filterMessageToChat)="getFilterMessage($event)"></app-search-message>
+        <app-messages-list [filterFromChat]="filter" [channel] = "selectedChannel" [authorRegistered]="author"></app-messages-list>
         <app-send-message [channel] = "selectedChannel" [authorRegistered]="author"></app-send-message>
       </div>
     </div>
