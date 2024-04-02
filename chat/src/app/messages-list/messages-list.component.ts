@@ -43,7 +43,8 @@ export class MessagesListComponent {
 
       let filteredMessages: Message[] = [];
 
-      filteredMessages = this.messages.filter(message => message.author.includes(this.filterFromChat) || message.body.includes(this.filterFromChat));
+      filteredMessages = this.messages.filter(message => message.author != null || message.body != null);
+      filteredMessages = filteredMessages.filter(message => message.author.includes(this.filterFromChat) || message.body.includes(this.filterFromChat));
 
       this.messages = [];
 
