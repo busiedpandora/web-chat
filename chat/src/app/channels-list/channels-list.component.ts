@@ -22,6 +22,8 @@ export class ChannelsListComponent {
 
   @Output() channelsLoadedEvent = new EventEmitter<boolean>();
 
+  show: boolean = true;
+
   constructor(private http: HttpClient) {
     this.initChannels(); 
   }
@@ -59,5 +61,9 @@ export class ChannelsListComponent {
       this.selectedChannel.selected = true;
       this.selectChannelEvent.emit(this.selectedChannel);
     }
+  }
+
+  toggleVisibility(): void {
+    this.show = !this.show;
   }
 }
