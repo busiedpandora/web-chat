@@ -5,7 +5,7 @@
             <input #messageText type="text" class="form-control" name="message.body" placeholder="Type here your message">
         </div>
         <div class="col-2">
-            <button class="btn btn-primary" type="submit" (click)="sendMessage(messageText.value, attachment.files)">Send</button>
+            <button class="btn btn-primary" type="submit" (click)="sendMessage(messageText, attachment.files)">Send</button>
         </div>
     </div>
 

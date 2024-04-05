@@ -16,6 +16,7 @@ export class SendMessageComponent {
   @Input() url: string;
   @Input() authorRegistered: string;
   @Input() channel: Channel;
+  sendMessageInput: string="";
 
 
   constructor(private http: HttpClient) {}
@@ -24,7 +25,9 @@ export class SendMessageComponent {
     this.apiKey = AppConfig.apiKey;
   }
 
-  sendMessage(messageText: string, attachment: FileList | null) {
+  sendMessage(input: HTMLInputElement, attachment: FileList | null) {
+    const messageText: string = input.value;
+
     if(messageText === "") {
       return;
     }
@@ -43,6 +46,7 @@ export class SendMessageComponent {
     .subscribe({
       next: data => {
         console.log('Message sent: ' + data);
+        input.value = "";
       },
       error: error => {
         console.error('There was an error!', error);

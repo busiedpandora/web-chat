@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Message } from '../message';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
@@ -25,6 +25,7 @@ export class MessagesListComponent {
   filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
   @Input() showSearchBar: boolean;
+  @ViewChild('messagesList') messagesList: ElementRef;
   
 
   constructor(private http: HttpClient) { }
@@ -37,6 +38,10 @@ export class MessagesListComponent {
     if (this.channel != undefined) {
       this.initMessages();
     }
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
   }
 
   initMessages() {
@@ -85,6 +90,12 @@ export class MessagesListComponent {
     this.filteredMessages = this.messages
       .filter(message => message.author != null && message.author.toLowerCase().includes(searchInput) 
         || message.body != null && message.body.toLowerCase().includes(searchInput));  
+  }
+
+  scrollToBottom() {
+    if(this.messagesList != null) {
+      this.messagesList.nativeElement.scrollTop = this.messagesList.nativeElement.scrollHeight;
+    }
   }
 }
 

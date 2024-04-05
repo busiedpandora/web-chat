@@ -3,7 +3,7 @@
 
     <app-search-message *ngIf="showSearchBar" [channel]="channel" (searchMessagesEvent)="onSearchMessages($event)"></app-search-message>
     
-    <div id="messagesList">
+    <div id="messagesList" #messagesList>
         <ul>
             <div *ngFor="let message of filteredMessages">
                 <li class="d-flex"
