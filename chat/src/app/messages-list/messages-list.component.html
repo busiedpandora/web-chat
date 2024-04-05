@@ -9,7 +9,7 @@
                 <li class="d-flex"
                 [ngClass]="authorRegistered === message.author ? 'justify-content-end' : 'justify-content-start'">
                     <div class="col-4">
-                        <app-message [message] = message></app-message>
+                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" (startEditingMessageEvent)="onEditingMessage($event)"></app-message>
                     </div>
                 </li>
             </div>

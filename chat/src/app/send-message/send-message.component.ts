@@ -33,7 +33,7 @@ export class SendMessageComponent {
     }
 
     const message = {
-      "body": messageText,
+      body: messageText,
       author: this.authorRegistered
     }
     

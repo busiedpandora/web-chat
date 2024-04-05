@@ -26,6 +26,7 @@ export class MessagesListComponent {
   @Input() authorRegistered: string;
   @Input() showSearchBar: boolean;
   @ViewChild('messagesList') messagesList: ElementRef;
+  editingMessage: boolean = false;
   
 
   constructor(private http: HttpClient) { }
@@ -43,7 +44,9 @@ export class MessagesListComponent {
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+    if(!this.editingMessage) {
+      this.scrollToBottom();
+    }
   }
 
   initMessages() {
@@ -65,8 +68,6 @@ export class MessagesListComponent {
           message.lastEditTime = messageJson.lastEditTime;
           message.channelId = messageJson.channelId;
           message.attachment = messageJson.attachment;
-
-          console.log(messageJson.channelId + " - ")
 
           this.messages[i] = message;
         }
@@ -101,6 +102,10 @@ export class MessagesListComponent {
     if(this.messagesList != null) {
       this.messagesList.nativeElement.scrollTop = this.messagesList.nativeElement.scrollHeight;
     }
+  }
+
+  onEditingMessage(editing: boolean) {
+    this.editingMessage = editing;
   }
 }
 
