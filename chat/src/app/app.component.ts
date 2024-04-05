@@ -12,6 +12,4 @@ import { ChatComponent } from './chat/chat.component';
 })
 export class AppComponent {
   title = 'chat';
-  author1: string = 'Lorraine Baines';
-  author2: string = 'Mr. Peabody';
 }

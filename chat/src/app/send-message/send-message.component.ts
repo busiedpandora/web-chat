@@ -13,6 +13,7 @@ import { AppConfig } from '../../config';
 })
 export class SendMessageComponent {
   apiKey: string;
+  @Input() url: string;
   @Input() authorRegistered: string;
   @Input() channel: Channel;
 
@@ -29,20 +30,20 @@ export class SendMessageComponent {
       author: this.authorRegistered
     }
     
-  const formData = new FormData();
-  formData.append("message", new Blob([JSON.stringify(message)], {type: 'application/json'}));
-  formData.append('attachment',  attachment != null && attachment?.length > 0 ? attachment[0] : new Blob());
+    const formData = new FormData();
+    formData.append("message", new Blob([JSON.stringify(message)], {type: 'application/json'}));
+    formData.append('attachment',  attachment != null && attachment?.length > 0 ? attachment[0] : new Blob());
 
-  this.http.post(`https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/${this.channel.id}/messages?apiKey=${this.apiKey}`,
-  formData)
-  .subscribe({
-    next: data => {
-      console.log('Message sent: ' + data);
-    },
-    error: error => {
-      console.error('There was an error!', error);
-    }
-  });
+    this.http.post(this.url + `channels/${this.channel.id}/messages?apiKey=${this.apiKey}`,
+    formData)
+    .subscribe({
+      next: data => {
+        console.log('Message sent: ' + data);
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
   }
 }
   

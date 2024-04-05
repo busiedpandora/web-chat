@@ -19,10 +19,12 @@ import { SearchMessageComponent } from '../search-message/search-message.compone
 })
 export class MessagesListComponent {
   apiKey: string;
+  @Input() url: string;
   @Input() channel: Channel;
   messages: Message[] = [];
   filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
+  @Input() showSearchBar: boolean;
   
 
   constructor(private http: HttpClient) { }
@@ -38,7 +40,7 @@ export class MessagesListComponent {
   }
 
   initMessages() {
-    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels/' + this.channel.id + '/messages?apiKey=' + this.apiKey)
+    this.http.get(this.url + 'channels/' + this.channel.id + '/messages?apiKey=' + this.apiKey)
       .subscribe((response: any) => {
         const messagesJson: any[] = response;
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { Channel } from '../channel';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
@@ -14,6 +14,8 @@ import { Output } from '@angular/core';
   styleUrl: './channels-list.component.css'
 })
 export class ChannelsListComponent {
+  @Input() url: string;
+  @Input() showChannelsList: boolean;
   channels : Channel[] = [];
 
   selectedChannel : Channel | null = null;
@@ -22,12 +24,17 @@ export class ChannelsListComponent {
 
   @Output() channelsLoadedEvent = new EventEmitter<boolean>();
 
-  constructor(private http: HttpClient) {
-    this.initChannels(); 
+  constructor(private http: HttpClient) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.url) {
+      this.initChannels();
+    }
   }
 
   initChannels() {
-    this.http.get('https://supsi-ticket.cloudns.org/supsi-chat/bff/channels')
+    console.log(this.url);
+    this.http.get(this.url + 'channels')
       .subscribe((response: any) => {
         const channelsJson : any[] = response;
         
