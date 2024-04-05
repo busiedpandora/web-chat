@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../message';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
@@ -34,9 +34,11 @@ export class MessagesListComponent {
     this.apiKey = AppConfig.apiKey;
   }
 
-  ngOnChanges() {
-    if (this.channel != undefined) {
-      this.initMessages();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.channel) {
+      if(this.channel != undefined) {
+        this.initMessages();
+      }
     }
   }
 
@@ -47,6 +49,7 @@ export class MessagesListComponent {
   initMessages() {
     this.http.get(this.url + 'channels/' + this.channel.id + '/messages?apiKey=' + this.apiKey)
       .subscribe((response: any) => {
+        this.messages = [];
         const messagesJson: any[] = response;
 
         for (let i = 0; i < messagesJson.length; i++) {
@@ -62,6 +65,8 @@ export class MessagesListComponent {
           message.lastEditTime = messageJson.lastEditTime;
           message.channelId = messageJson.channelId;
           message.attachment = messageJson.attachment;
+
+          console.log(messageJson.channelId + " - ")
 
           this.messages[i] = message;
         }
