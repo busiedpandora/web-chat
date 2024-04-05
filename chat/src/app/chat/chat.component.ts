@@ -21,8 +21,7 @@ export class ChatComponent {
   selectedChannel: Channel;
   showChannelsList: boolean = true;
   @Input() author: string;
-  messagesCurrent: Message[];
-  filter: string;
+
 
   onChannelSelected(channel : Channel){
     this.selectedChannel = channel;
@@ -30,9 +29,5 @@ export class ChatComponent {
 
   onChannelsLoaded(showChannelsList : boolean) {
     this.showChannelsList = showChannelsList;
-  }
-
-  getFilterMessage(filterMessage: string){
-    this.filter = filterMessage;
   }
 }

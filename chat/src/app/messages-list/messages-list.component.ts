@@ -8,50 +8,32 @@ import { Input } from '@angular/core';
 import { Channel } from '../channel';
 import { MessageComponent } from '../message/message.component';
 import { AppConfig } from '../../config';
+import { SearchMessageComponent } from '../search-message/search-message.component';
 
 @Component({
   selector: 'app-messages-list',
   standalone: true,
-  imports: [CommonModule, NgFor, HttpClientModule, MessageComponent],
+  imports: [CommonModule, NgFor, HttpClientModule, MessageComponent, SearchMessageComponent],
   templateUrl: './messages-list.component.html',
   styleUrl: './messages-list.component.css'
 })
 export class MessagesListComponent {
   apiKey: string;
-  //authorRegistered: string;
   @Input() channel: Channel;
   messages: Message[] = [];
+  filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
-  @Input() filterFromChat: string;
-
+  
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
-    //this.authorRegistered = AppConfig.authorRegistered;
   }
 
   ngOnChanges() {
     if (this.channel != undefined) {
       this.initMessages();
-    }
-  }
-
-  OnChanges(){
-    if (this.filterFromChat != undefined && this.filterFromChat.trim().length !== 0) {
-
-      let filteredMessages: Message[] = [];
-
-      filteredMessages = this.messages.filter(message => message.author != null || message.body != null);
-      filteredMessages = filteredMessages.filter(message => message.author.includes(this.filterFromChat) || message.body.includes(this.filterFromChat));
-
-      this.messages = [];
-
-      filteredMessages.forEach((message: any) =>{
-        this.messages.push(message);
-      })
-
     }
   }
 
@@ -79,6 +61,8 @@ export class MessagesListComponent {
 
         this.sortMessagesByDate();
 
+        this.filteredMessages = this.messages;
+
       }, (error) => {
         console.error('Error:', error);
       });
@@ -86,6 +70,19 @@ export class MessagesListComponent {
 
   sortMessagesByDate() {
     this.messages.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  onSearchMessages(searchInput : string) {
+    if(searchInput === "") {
+      this.filteredMessages = this.messages;
+      return;
+    }
+
+    searchInput = searchInput.toLowerCase();
+
+    this.filteredMessages = this.messages
+      .filter(message => message.author != null && message.author.toLowerCase().includes(searchInput) 
+        || message.body != null && message.body.toLowerCase().includes(searchInput));  
   }
 }
 

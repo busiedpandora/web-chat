@@ -1,28 +1,41 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnChanges } from '@angular/core';
 import { Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Input } from '@angular/core';
+import { Channel } from '../channel';
+import { SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-search-message',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './search-message.component.html',
   styleUrl: './search-message.component.css'
 })
-export class SearchMessageComponent {
+export class SearchMessageComponent implements OnChanges {
+  searchInput: string = "";
+  @Output() searchMessagesEvent = new EventEmitter<string>();
+  @Input() channel: Channel;
 
-  filterChat: string;
-  @Output() filterMessageToChat = new EventEmitter<string>();
-  show: boolean = true;
 
-
-  postFilter(filterChoose: string){
-    this.filterChat = filterChoose;
-    this.filterMessageToChat.emit(this.filterChat);
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.channel) {
+      this.clearSearchInput();
+    }
   }
 
-  toggleVisibility(): void {
-    this.show = !this.show;
+  searchMessages() {
+    if(this.searchInput == null) {
+      return;
+    }
+    
+    this.searchMessagesEvent.emit(this.searchInput);
   }
 
+  clearSearchInput() {
+    this.searchInput = "";
+
+    this.searchMessagesEvent.emit("");
+  }
 }
