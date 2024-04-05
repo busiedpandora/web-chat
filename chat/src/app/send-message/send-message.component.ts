@@ -25,6 +25,10 @@ export class SendMessageComponent {
   }
 
   sendMessage(messageText: string, attachment: FileList | null) {
+    if(messageText === "") {
+      return;
+    }
+
     const message = {
       "body": messageText,
       author: this.authorRegistered

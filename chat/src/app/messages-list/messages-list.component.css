@@ -1,13 +1,22 @@
 #channelName {
     padding: 10px;
-    border-bottom: 5px solid #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+}
+
+#messagesList {
+    height: 69vh;
+    overflow-y:auto;
 }
 
 ul {
     list-style: none;
     padding-left: 2rem;
     padding-right: 2rem;
-    /*overflow-y: scroll;
-    overflow-x: auto;
-    max-height: 700px;*/
+    margin: 0;
+    height: 100%;
+}
+
+li {
+    display: flex;
+    flex-grow: 1;
 }
