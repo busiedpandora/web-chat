@@ -25,6 +25,7 @@
     <div class="border border-1 my-2"></div>
     <div *ngIf="onReply">
         <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage">
+        <input #attachment type="file" class="form-control mb-2" name="attachment">
     </div>
     <div class="d-flex justify-content-between">
         <div>

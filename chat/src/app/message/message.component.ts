@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../config';
 import { HttpHeaders } from '@angular/common/http';
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-message',
@@ -27,6 +29,7 @@ export class MessageComponent {
   @Output() startReplyingToMessageEvent = new EventEmitter<boolean>();
   repliedMessage: string = "";
   @Input() parentMessage: Message | null = null;
+  @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
 
 
   constructor(private http: HttpClient) {}
@@ -55,6 +58,10 @@ export class MessageComponent {
   }
 
   saveEdit() {
+    if(this.editedMessage === "") {
+      return;
+    }
+
     this.message.body = this.editedMessage;
 
     const body = {
@@ -93,8 +100,15 @@ export class MessageComponent {
     
     const formData = new FormData();
     formData.append("message", new Blob([JSON.stringify(message)], {type: 'application/json'}));
-    formData.append('attachment', new Blob());
 
+    if(this.attachment == null) {
+      formData.append('attachment', new Blob());
+    }
+    else {
+      const attachmentFiles = this.attachment.nativeElement.files;
+      formData.append('attachment', attachmentFiles != null && attachmentFiles?.length > 0 ? attachmentFiles[0] : new Blob());
+    }
+    
     this.http.post(this.url + `channels/${this.message.channelId}/messages?apiKey=${this.apiKey}`,
     formData)
     .subscribe({
