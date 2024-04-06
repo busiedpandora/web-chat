@@ -9,7 +9,9 @@
                 <li class="d-flex"
                 [ngClass]="authorRegistered === message.author ? 'justify-content-end' : 'justify-content-start'">
                     <div class="col-4">
-                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" (startEditingMessageEvent)="onEditingMessage($event)"></app-message>
+                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" [parentMessage]="getMessageById(message.parentMessageId)"
+                            (startEditingMessageEvent)="onEditingMessage($event)" (startReplyingToMessageEvent)="onReplyingToMessage($event)">
+                        </app-message>
                     </div>
                 </li>
             </div>

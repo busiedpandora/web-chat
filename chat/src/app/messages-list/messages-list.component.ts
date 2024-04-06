@@ -27,6 +27,7 @@ export class MessagesListComponent {
   @Input() showSearchBar: boolean;
   @ViewChild('messagesList') messagesList: ElementRef;
   editingMessage: boolean = false;
+  replyingToMessage: boolean = false;
   
 
   constructor(private http: HttpClient) { }
@@ -44,7 +45,7 @@ export class MessagesListComponent {
   }
 
   ngAfterViewChecked() {
-    if(!this.editingMessage) {
+    if(!this.editingMessage && !this.replyingToMessage) {
       this.scrollToBottom();
     }
   }
@@ -106,6 +107,24 @@ export class MessagesListComponent {
 
   onEditingMessage(editing: boolean) {
     this.editingMessage = editing;
+  }
+
+  onReplyingToMessage(replying: boolean) {
+    this.replyingToMessage = replying;
+  }
+
+  getMessageById(id: number | null) {
+    if(id == null) {
+      return null;
+    }
+
+    const message: Message | undefined = this.messages.find(message => message.id === id);
+    
+    if(message == undefined) {
+      return null;
+    }
+
+    return message;
   }
 }
 

@@ -23,6 +23,10 @@ export class MessageComponent {
   onEdit: boolean = false;
   @Output() startEditingMessageEvent = new EventEmitter<boolean>();
   editedMessage: string = "";
+  onReply: boolean = false;
+  @Output() startReplyingToMessageEvent = new EventEmitter<boolean>();
+  repliedMessage: string = "";
+  @Input() parentMessage: Message | null = null;
 
 
   constructor(private http: HttpClient) {}
@@ -64,6 +68,39 @@ export class MessageComponent {
       next: data => {
         console.log('Message edited: ' + data);
         this.onEdit = false;
+      },
+      error: error => {
+        console.error('There was an error!', error);
+      }
+    });
+  }
+
+  replyToMessage() {
+    this.onReply = true;
+    this.startReplyingToMessageEvent.emit(true);
+  }
+
+  saveReply() {
+    if(this.repliedMessage === "") {
+      return;
+    }
+
+    const message = {
+      body: this.repliedMessage,
+      author: this.authorRegistered,
+      parentMessageId: this.message.id
+    }
+    
+    const formData = new FormData();
+    formData.append("message", new Blob([JSON.stringify(message)], {type: 'application/json'}));
+    formData.append('attachment', new Blob());
+
+    this.http.post(this.url + `channels/${this.message.channelId}/messages?apiKey=${this.apiKey}`,
+    formData)
+    .subscribe({
+      next: data => {
+        console.log('Reply message sent: ' + data);
+        this.onReply = false;
       },
       error: error => {
         console.error('There was an error!', error);

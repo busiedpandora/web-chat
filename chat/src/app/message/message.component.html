@@ -1,4 +1,13 @@
 <div class="border border-3 rounded-2 p-2 my-3">
+    <div *ngIf="parentMessage != null">
+        <img src="./../../../assets/images/reply.svg" class="mb-1 me-1" alt="reply icon" width="18" height="18">
+        <span>In response to </span>
+        <span class="text-primary">{{parentMessage.author}}</span>
+        <span>:</span>
+        <br>
+        <span class="bg-secondary-subtle">{{parentMessage.body}}</span>
+        <div class="border border-1 my-2"></div>
+    </div>
     <img src="./../../../assets/images/person-workspace.svg" alt="user icon" width="22" height="22">
     <span class="ms-3 fs-5 fw-semibold text-primary">{{message.author}}</span>
     <div class="border border-1 my-2"></div>
@@ -14,11 +23,18 @@
     <span *ngIf="message.date != message.lastEditTime" class="text-secondary">Edited {{formatDate(message.date)}}
     </span>
     <div class="border border-1 my-2"></div>
+    <div *ngIf="onReply">
+        <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage">
+    </div>
     <div class="d-flex justify-content-between">
         <div>
-            <button *ngIf="message.author!=authorRegistered" class="btn btn-outline-primary">
+            <button *ngIf="message.author!=authorRegistered && !onReply" class="btn btn-outline-primary" (click)="replyToMessage()" type="button">
                 <img src="./../../../assets/images/reply-fill.svg" class="mb-1 me-1" alt="reply icon" width="22" height="22">
                 Reply
+            </button>
+            <button *ngIf="message.author!=authorRegistered && onReply" class="btn btn-outline-primary" (click)="saveReply()" type="button">
+                <img src="./../../../assets/images/send-fill.svg" class="mb-1 me-1" alt="reply icon" width="22" height="22">
+                Send reply
             </button>
         </div>
         <div>
