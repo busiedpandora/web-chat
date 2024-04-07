@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { Channel } from '../channel';
 import { HttpClient } from '@angular/common/http';
@@ -17,7 +17,7 @@ export class SendMessageComponent {
   @Input() authorRegistered: string;
   @Input() channel: Channel;
   sendMessageInput: string="";
-
+  @Output() messageSentEvent: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private http: HttpClient) {}
 
@@ -47,6 +47,8 @@ export class SendMessageComponent {
       next: data => {
         console.log('Message sent: ' + data);
         input.value = "";
+
+        this.messageSentEvent.emit(messageText);
       },
       error: error => {
         console.error('There was an error!', error);

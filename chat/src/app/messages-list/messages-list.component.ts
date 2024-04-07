@@ -39,7 +39,7 @@ export class MessagesListComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.channel) {
       if(this.channel != undefined) {
-        this.initMessages();
+        //this.initMessages();
       }
     }
   }
@@ -50,7 +50,13 @@ export class MessagesListComponent {
     }
   }
 
-  initMessages() {
+  updateMessages(messages: Message[]) {
+    this.messages = messages;
+    this.sortMessagesByDate();
+    this.filteredMessages = messages;
+  }
+
+  /*initMessages() {
     this.http.get(this.url + 'channels/' + this.channel.id + '/messages?apiKey=' + this.apiKey)
       .subscribe((response: any) => {
         this.messages = [];
@@ -80,7 +86,7 @@ export class MessagesListComponent {
       }, (error) => {
         console.error('Error:', error);
       });
-  }
+  }*/
 
   sortMessagesByDate() {
     this.messages.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());

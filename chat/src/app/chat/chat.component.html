@@ -5,8 +5,8 @@
         (selectChannelEvent) = "onChannelSelected($event)" (channelsLoadedEvent)="onChannelsLoaded($event)"></app-channels-list>
       </div>
       <div class="col">
-        <app-messages-list [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" [showSearchBar]="showSearchBar"></app-messages-list>
-        <app-send-message [url]="url" [channel] = "selectedChannel" [authorRegistered]="author"></app-send-message>
+        <app-messages-list #messagesList [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" [showSearchBar]="showSearchBar"></app-messages-list>
+        <app-send-message [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" (messageSentEvent)="sendMessage($event)"></app-send-message>
       </div>
     </div>
   </div>
