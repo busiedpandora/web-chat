@@ -24,10 +24,8 @@ export class MessageComponent {
   @Input() message : Message;
   @Input() authorRegistered: string;
   onEdit: boolean = false;
-  @Output() startEditingMessageEvent = new EventEmitter<boolean>();
   editedMessage: string = "";
   onReply: boolean = false;
-  @Output() startReplyingToMessageEvent = new EventEmitter<boolean>();
   repliedMessage: string = "";
   @Input() parentMessage: Message | null = null;
   @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
@@ -53,7 +51,6 @@ export class MessageComponent {
 
   editMessage() {
     this.onEdit = true;
-    this.startEditingMessageEvent.emit(true);
 
     this.editedMessage = this.message.body;
   }
@@ -85,7 +82,6 @@ export class MessageComponent {
 
   replyToMessage() {
     this.onReply = true;
-    this.startReplyingToMessageEvent.emit(true);
   }
 
   saveReply() {

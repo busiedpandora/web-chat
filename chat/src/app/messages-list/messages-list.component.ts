@@ -26,10 +26,9 @@ export class MessagesListComponent {
   filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
   @Input() showSearchBar: boolean;
-  @ViewChild('messagesList') messagesList: ElementRef;
-  editingMessage: boolean = false;
-  replyingToMessage: boolean = false;
+  @ViewChild('messagesListContainer') messagesListContainer: ElementRef;
   @Output() receivedMessageFromOtherChannelEvent = new EventEmitter<number>();
+  loadFirstTime: boolean = true;
   
 
   constructor(private http: HttpClient, private websocketService: WebsocketService) { }
@@ -69,10 +68,10 @@ export class MessagesListComponent {
     }
   }
 
-  ngAfterViewChecked() {
-    if(!this.editingMessage && !this.replyingToMessage) {
+  ngAfterViewInit() {
+    setTimeout(() => {
       this.scrollToBottom();
-    }
+    }, 200)
   }
 
   initMessages() {
@@ -100,7 +99,6 @@ export class MessagesListComponent {
 
         this.sortMessagesByDate();
         this.filteredMessages = this.messages;
-
       }, (error) => {
         console.error('Error:', error);
       });
@@ -124,17 +122,9 @@ export class MessagesListComponent {
   }
 
   scrollToBottom() {
-    if(this.messagesList != null) {
-      this.messagesList.nativeElement.scrollTop = this.messagesList.nativeElement.scrollHeight;
+    if(this.messagesListContainer != null) {
+      this.messagesListContainer.nativeElement.scrollTop = this.messagesListContainer.nativeElement.scrollHeight;
     }
-  }
-
-  onEditingMessage(editing: boolean) {
-    this.editingMessage = editing;
-  }
-
-  onReplyingToMessage(replying: boolean) {
-    this.replyingToMessage = replying;
   }
 
   getMessageById(id: number | null) {

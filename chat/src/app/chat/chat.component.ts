@@ -24,6 +24,7 @@ export class ChatComponent {
   @Input() showSearchBar: boolean;
   @Input() author: string;
   @ViewChild(ChannelsListComponent) channelsListComponent: ChannelsListComponent;
+  @ViewChild(MessagesListComponent) messagesListComponent: MessagesListComponent;
   
 
   constructor() {}
@@ -34,6 +35,7 @@ export class ChatComponent {
 
   onChannelSelected(channel : Channel){
     this.selectedChannel = channel;
+    this.messagesListComponent.scrollToBottom();
   }
 
   onChannelsLoaded(length : number) {

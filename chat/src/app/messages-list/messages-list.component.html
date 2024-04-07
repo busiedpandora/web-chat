@@ -3,14 +3,13 @@
 
     <app-search-message *ngIf="showSearchBar" [channel]="channel" (searchMessagesEvent)="onSearchMessages($event)"></app-search-message>
     
-    <div id="messagesList" #messagesList>
+    <div id="messagesList" #messagesListContainer>
         <ul>
             <div *ngFor="let message of filteredMessages">
                 <li class="d-flex"
                 [ngClass]="authorRegistered === message.author ? 'justify-content-end' : 'justify-content-start'">
                     <div class="col-4">
-                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" [parentMessage]="getMessageById(message.parentMessageId)"
-                            (startEditingMessageEvent)="onEditingMessage($event)" (startReplyingToMessageEvent)="onReplyingToMessage($event)">
+                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" [parentMessage]="getMessageById(message.parentMessageId)">
                         </app-message>
                     </div>
                 </li>
@@ -18,5 +17,3 @@
         </ul>
     </div>
 </div>
-
-
