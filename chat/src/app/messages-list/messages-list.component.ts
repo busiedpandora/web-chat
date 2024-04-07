@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../message';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
@@ -28,7 +28,7 @@ export class MessagesListComponent {
   @Input() showSearchBar: boolean;
   @ViewChild('messagesListContainer') messagesListContainer: ElementRef;
   @Output() receivedMessageFromOtherChannelEvent = new EventEmitter<number>();
-  loadFirstTime: boolean = true;
+  receivedMessagesFromCurrentChannel: number = 0;
   
 
   constructor(private http: HttpClient, private websocketService: WebsocketService) { }
@@ -50,9 +50,16 @@ export class MessagesListComponent {
       message.channelId = messageJson.channelId;
       //message.attachment = messageJson.attachment;
 
-      if(message.channelId == this.channel.id) {
+      if(message.channelId === this.channel.id) {
         this.messages.push(message);
-        //this.filteredMessages.push(message);
+        if(message.author === this.authorRegistered) {
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 200)
+        }
+        else {
+          this.receivedMessagesFromCurrentChannel++;
+        }
       }
       else {
         this.receivedMessageFromOtherChannelEvent.emit(message.channelId);
@@ -71,7 +78,9 @@ export class MessagesListComponent {
   ngAfterViewInit() {
     setTimeout(() => {
       this.scrollToBottom();
-    }, 200)
+    }, 200);
+
+    this.messagesListContainer.nativeElement.addEventListener('scroll', this.onMessagesListScroll.bind(this));
   }
 
   initMessages() {
@@ -139,6 +148,18 @@ export class MessagesListComponent {
     }
 
     return message;
+  }
+
+  onMessagesListScroll() {
+    const scrollTop = this.messagesListContainer.nativeElement.scrollTop;
+    const scrollHeight = this.messagesListContainer.nativeElement.scrollHeight;
+    const offsetHeight = this.messagesListContainer.nativeElement.offsetHeight;
+
+    if (Math.ceil(scrollTop + offsetHeight) >= scrollHeight) {
+      //reached bottom of scroll page
+      console.log("reached bottom");
+      this.receivedMessagesFromCurrentChannel = 0;
+    }
   }
 }
 
