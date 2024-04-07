@@ -43,7 +43,7 @@ export class MessagesListComponent {
       console.log("message sent via websocket! " + messageJson);
       
       const message: Message = new Message();
-      //message.parentMessageId = messageJson.parentMessageId;
+      message.parentMessageId = messageJson.parentMessageId;
       message.body = messageJson.body;
       message.author = messageJson.author;
       message.date = messageJson.date;

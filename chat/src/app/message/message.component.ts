@@ -9,6 +9,7 @@ import { AppConfig } from '../../config';
 import { HttpHeaders } from '@angular/common/http';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-message',
@@ -32,7 +33,7 @@ export class MessageComponent {
   @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private websocketService: WebsocketService) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
@@ -115,6 +116,19 @@ export class MessageComponent {
       next: data => {
         console.log('Reply message sent: ' + data);
         this.onReply = false;
+
+        const currentDate: Date = new Date();
+
+        const message = {
+          body: this.repliedMessage,
+          author: this.authorRegistered,
+          channelId: this.message.channelId,
+          date: currentDate,
+          lastEditTime: currentDate,
+          parentMessageId: this.message.id
+        }
+    
+        this.websocketService.sendMessage('new-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);
