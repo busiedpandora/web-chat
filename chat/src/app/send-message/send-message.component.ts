@@ -3,6 +3,7 @@ import { Input } from '@angular/core';
 import { Channel } from '../channel';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../config';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-send-message',
@@ -17,12 +18,13 @@ export class SendMessageComponent {
   @Input() authorRegistered: string;
   @Input() channel: Channel;
   sendMessageInput: string="";
-  @Output() messageSentEvent: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private websocketService: WebsocketService) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
+
+    //this.websocketService.connect();
   }
 
   sendMessage(input: HTMLInputElement, attachment: FileList | null) {
@@ -48,7 +50,17 @@ export class SendMessageComponent {
         console.log('Message sent: ' + data);
         input.value = "";
 
-        this.messageSentEvent.emit(messageText);
+        const currentDate: Date = new Date();
+
+        const message = {
+          body: messageText,
+          author: this.authorRegistered,
+          channelId: this.channel.id,
+          date: currentDate,
+          lastEditTime: currentDate
+        }
+    
+        this.websocketService.sendMessage('new-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);

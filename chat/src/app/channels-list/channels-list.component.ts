@@ -22,7 +22,10 @@ export class ChannelsListComponent {
 
   @Output() selectChannelEvent = new EventEmitter<Channel>();
 
-  @Output() channelsLoadedEvent = new EventEmitter<boolean>();
+  @Output() channelsLoadedEvent = new EventEmitter<number>();
+
+  unreadMessagesInChannels: number[];
+
 
   constructor(private http: HttpClient) {}
 
@@ -33,7 +36,6 @@ export class ChannelsListComponent {
   }
 
   initChannels() {
-    console.log(this.url);
     this.http.get(this.url + 'channels')
       .subscribe((response: any) => {
         const channelsJson : any[] = response;
@@ -48,12 +50,12 @@ export class ChannelsListComponent {
 
           this.channels[i] = channel;
         }
+        this.unreadMessagesInChannels = new Array(this.channels.length).fill(0);
 
+        this.channelsLoadedEvent.emit(this.channels.length);
+        
         this.selectedChannel = this.channels[0];
         this.selectChannelEvent.emit(this.selectedChannel);
-
-        this.channelsLoadedEvent.emit(this.channels.length > 1);
-
       }, (error) => {
         console.error('Error:', error);
       });
@@ -64,7 +66,36 @@ export class ChannelsListComponent {
       this.selectedChannel.selected = false;
       this.selectedChannel = channel;
       this.selectedChannel.selected = true;
+      this.resetNumberOfUnreadMessagesInChannel(this.selectedChannel.id);
       this.selectChannelEvent.emit(this.selectedChannel);
+    }
+  }
+
+  getNumberOfUnreadMessagesInChannel(channelId: number) {
+    const index: number = channelId - 1;
+    if(index < this.unreadMessagesInChannels.length) { 
+      return this.unreadMessagesInChannels[index];
+    }
+
+    return -1;
+  }
+
+  increaseNumberOfUnreadMessagesInChannel(channelId: number) {
+    const index: number = channelId - 1;
+    if(index < this.unreadMessagesInChannels.length) {
+      this.unreadMessagesInChannels = this.unreadMessagesInChannels.map((value, idx) => {
+        if (idx === index) {
+          return value + 1;
+        }
+        return value;
+      });
+    }
+  }
+
+  resetNumberOfUnreadMessagesInChannel(channelId: number) {
+    const index: number = channelId - 1;
+    if(index < this.unreadMessagesInChannels.length) {
+      this.unreadMessagesInChannels[index] = 0;
     }
   }
 }
