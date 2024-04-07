@@ -70,9 +70,24 @@ export class MessageComponent {
 
     this.http.put(this.url + `messages/${this.message.id}/body?apiKey=${this.apiKey}`, body, {headers: headers})
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Message edited: ' + data);
         this.onEdit = false;
+
+        const currentDate: Date = new Date();
+
+        const message = {
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId
+
+        }
+
+        this.websocketService.sendMessage('update-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);
@@ -109,19 +124,18 @@ export class MessageComponent {
     this.http.post(this.url + `channels/${this.message.channelId}/messages?apiKey=${this.apiKey}`,
     formData)
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Reply message sent: ' + data);
         this.onReply = false;
 
-        const currentDate: Date = new Date();
-
         const message = {
-          body: this.repliedMessage,
-          author: this.authorRegistered,
-          channelId: this.message.channelId,
-          date: currentDate,
-          lastEditTime: currentDate,
-          parentMessageId: this.message.id
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId
         }
     
         this.websocketService.sendMessage('new-message', JSON.stringify(message));

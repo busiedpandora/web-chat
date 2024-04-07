@@ -46,18 +46,18 @@ export class SendMessageComponent {
     this.http.post(this.url + `channels/${this.channel.id}/messages?apiKey=${this.apiKey}`,
     formData)
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Message sent: ' + data);
         input.value = "";
-
-        const currentDate: Date = new Date();
-
+      
         const message = {
-          body: messageText,
-          author: this.authorRegistered,
-          channelId: this.channel.id,
-          date: currentDate,
-          lastEditTime: currentDate
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId
         }
     
         this.websocketService.sendMessage('new-message', JSON.stringify(message));

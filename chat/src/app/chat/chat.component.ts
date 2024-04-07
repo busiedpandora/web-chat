@@ -35,7 +35,9 @@ export class ChatComponent {
 
   onChannelSelected(channel : Channel){
     this.selectedChannel = channel;
-    this.messagesListComponent.scrollToBottom();
+    setTimeout(() => {
+      this.messagesListComponent.scrollToBottom();
+    }, 200)
   }
 
   onChannelsLoaded(length : number) {
