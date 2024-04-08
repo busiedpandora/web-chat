@@ -31,7 +31,7 @@ export class MessagesListComponent {
   receivedMessagesFromCurrentChannel: number = 0;
   @Input() channelsShown: boolean;
   @Output() toggleChannelsEvent = new EventEmitter<boolean>();
-
+  @Output() messageFromListClickedEvent = new EventEmitter<Message>();
 
   constructor(private http: HttpClient, private websocketService: WebsocketService) { }
 
@@ -188,6 +188,10 @@ export class MessagesListComponent {
 
   toggleSearchBar() {
     this.searchBarShown = !this.searchBarShown;
+  }
+
+  onMessageFromListClick(message: Message) {
+    this.messageFromListClickedEvent.emit(message);
   }
 }
 

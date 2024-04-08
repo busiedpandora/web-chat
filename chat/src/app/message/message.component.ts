@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Message } from '../message';
 import { Input } from '@angular/core';
 import { NgIf } from '@angular/common';
@@ -30,6 +30,7 @@ export class MessageComponent {
   repliedMessage: string = "";
   @Input() parentMessage: Message | null = null;
   @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
+  @Output() messageClickedEvent = new EventEmitter<Message>();
 
   hasLink: boolean = false;
   linkTitle: string = "";
@@ -194,5 +195,9 @@ export class MessageComponent {
         this.linkImageUrl = imageUrl;
       }
     });
+  }
+
+  onMessageClick(message: Message) {
+    this.messageClickedEvent.emit(message);
   }
 }

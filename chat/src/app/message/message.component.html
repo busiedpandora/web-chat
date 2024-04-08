@@ -8,8 +8,10 @@
         <span class="bg-secondary-subtle">{{parentMessage.body}}</span>
         <div class="border border-1 my-2"></div>
     </div>
-    <img src="./../../../assets/images/person-workspace.svg" alt="user icon" width="22" height="22">
-    <span class="ms-3 fs-5 fw-semibold text-primary">{{message.author}}</span>
+    <div (click)="onMessageClick(message)">
+        <img src="./../../../assets/images/person-workspace.svg" alt="user icon" width="22" height="22">
+        <span class="ms-3 fs-5 fw-semibold text-primary">{{message.author}}</span>
+    </div>
     <div class="border border-1 my-2"></div>
     <div *ngIf="!onEdit">
         <div [innerHTML]="generateMessageBody(message.body)"></div>

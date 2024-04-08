@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ChannelsListComponent } from '../channels-list/channels-list.component'
 import { CommonModule } from '@angular/common';
 import { MessagesListComponent } from '../messages-list/messages-list.component'
@@ -7,6 +7,7 @@ import { Input } from '@angular/core';
 import { SendMessageComponent } from '../send-message/send-message.component';
 import { SearchMessageComponent } from '../search-message/search-message.component';
 import { AppConfig } from '../../config';
+import { Message } from '../message';
 
 @Component({
   selector: 'app-chat',
@@ -25,6 +26,7 @@ export class ChatComponent {
   @Input() author: string;
   @ViewChild(ChannelsListComponent) channelsListComponent: ChannelsListComponent;
   @ViewChild(MessagesListComponent) messagesListComponent: MessagesListComponent;
+  @Output() messageInChatClickedEvent = new EventEmitter<Message>();
   
 
   constructor() {}
@@ -50,5 +52,9 @@ export class ChatComponent {
 
   onToggleChannels(value: boolean) {
     this.showChannelsList = value;
+  }
+
+  onMessageInChatClick(message: Message) {
+    this.messageInChatClickedEvent.emit(message);
   }
 }
