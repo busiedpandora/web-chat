@@ -39,12 +39,14 @@ export class MessageComponent {
 
   formatDate(date : Date) {
     let formattedDate = date.toLocaleString(
-      'it-CH', { 
+      'de-DE', { 
+      timeZone: 'CET',
       year: 'numeric', month: '2-digit', day: '2-digit', 
       hour: '2-digit', minute: '2-digit', 
-      hour12: true });
+      hour12: false });
 
-    formattedDate = formattedDate.replace("T", " ").slice(0, -7);
+    formattedDate = formattedDate.replace("T", " ");
+    formattedDate = formattedDate.substring(0, formattedDate.lastIndexOf(":"));
 
     return formattedDate;
   }

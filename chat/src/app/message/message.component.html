@@ -18,10 +18,13 @@
         <input type="text" class="form-control" [(ngModel)]="editedMessage">
     </div>
     <div class="border border-1 my-2"></div>
-    <span *ngIf="message.date == message.lastEditTime" class="text-secondary">{{formatDate(message.date)}}
-    </span>
-    <span *ngIf="message.date != message.lastEditTime" class="text-secondary">Edited {{formatDate(message.lastEditTime)}}
-    </span>
+    <div>
+        <span *ngIf="message.date == message.lastEditTime" class="text-secondary">{{formatDate(message.date)}}</span>
+        <div *ngIf="message.date != message.lastEditTime" class="text-secondary">
+            <span class="text-info fw-bold">Edited </span>
+            <span class="text-secondary">{{formatDate(message.lastEditTime)}}</span>
+        </div>
+    </div>
     <div class="border border-1 my-2"></div>
     <div *ngIf="onReply">
         <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage">
