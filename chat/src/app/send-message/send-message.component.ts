@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { Channel } from '../channel';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../config';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-send-message',
@@ -18,11 +19,12 @@ export class SendMessageComponent {
   @Input() channel: Channel;
   sendMessageInput: string="";
 
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private websocketService: WebsocketService) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
+
+    //this.websocketService.connect();
   }
 
   sendMessage(input: HTMLInputElement, attachment: FileList | null) {
@@ -44,9 +46,22 @@ export class SendMessageComponent {
     this.http.post(this.url + `channels/${this.channel.id}/messages?apiKey=${this.apiKey}`,
     formData)
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Message sent: ' + data);
         input.value = "";
+      
+        const message = {
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
+        }
+    
+        this.websocketService.sendMessage('new-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);

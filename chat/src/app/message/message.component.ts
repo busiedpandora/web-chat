@@ -9,6 +9,7 @@ import { AppConfig } from '../../config';
 import { HttpHeaders } from '@angular/common/http';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-message',
@@ -23,16 +24,14 @@ export class MessageComponent {
   @Input() message : Message;
   @Input() authorRegistered: string;
   onEdit: boolean = false;
-  @Output() startEditingMessageEvent = new EventEmitter<boolean>();
   editedMessage: string = "";
   onReply: boolean = false;
-  @Output() startReplyingToMessageEvent = new EventEmitter<boolean>();
   repliedMessage: string = "";
   @Input() parentMessage: Message | null = null;
   @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private websocketService: WebsocketService) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
@@ -40,19 +39,20 @@ export class MessageComponent {
 
   formatDate(date : Date) {
     let formattedDate = date.toLocaleString(
-      'it-CH', { 
+      'de-DE', { 
+      timeZone: 'CET',
       year: 'numeric', month: '2-digit', day: '2-digit', 
       hour: '2-digit', minute: '2-digit', 
-      hour12: true });
+      hour12: false });
 
-    formattedDate = formattedDate.replace("T", " ").slice(0, -7);
+    formattedDate = formattedDate.replace("T", " ");
+    formattedDate = formattedDate.substring(0, formattedDate.lastIndexOf(":"));
 
     return formattedDate;
   }
 
   editMessage() {
     this.onEdit = true;
-    this.startEditingMessageEvent.emit(true);
 
     this.editedMessage = this.message.body;
   }
@@ -72,9 +72,22 @@ export class MessageComponent {
 
     this.http.put(this.url + `messages/${this.message.id}/body?apiKey=${this.apiKey}`, body, {headers: headers})
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Message edited: ' + data);
         this.onEdit = false;
+
+        const message = {
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
+        }
+
+        this.websocketService.sendMessage('update-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);
@@ -84,7 +97,6 @@ export class MessageComponent {
 
   replyToMessage() {
     this.onReply = true;
-    this.startReplyingToMessageEvent.emit(true);
   }
 
   saveReply() {
@@ -112,9 +124,22 @@ export class MessageComponent {
     this.http.post(this.url + `channels/${this.message.channelId}/messages?apiKey=${this.apiKey}`,
     formData)
     .subscribe({
-      next: data => {
+      next: (data: any) => {
         console.log('Reply message sent: ' + data);
         this.onReply = false;
+
+        const message = {
+          id: data.id,
+          body: data.body,
+          author: data.author,
+          channelId: data.channelId,
+          date: data.date,
+          lastEditTime: data.lastEditTime,
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
+        }
+    
+        this.websocketService.sendMessage('new-message', JSON.stringify(message));
       },
       error: error => {
         console.error('There was an error!', error);

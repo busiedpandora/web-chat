@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Message } from '../message';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
@@ -9,6 +9,7 @@ import { Channel } from '../channel';
 import { MessageComponent } from '../message/message.component';
 import { AppConfig } from '../../config';
 import { SearchMessageComponent } from '../search-message/search-message.component';
+import { WebsocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-messages-list',
@@ -25,29 +26,79 @@ export class MessagesListComponent {
   filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
   @Input() showSearchBar: boolean;
-  @ViewChild('messagesList') messagesList: ElementRef;
-  editingMessage: boolean = false;
-  replyingToMessage: boolean = false;
-  
+  @ViewChild('messagesListContainer') messagesListContainer: ElementRef;
+  @Output() receivedMessageFromOtherChannelEvent = new EventEmitter<number>();
+  receivedMessagesFromCurrentChannel: number = 0;
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private websocketService: WebsocketService) { }
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
+
+    this.setUpWebsocket();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.channel) {
-      if(this.channel != undefined) {
+      if (this.channel != undefined) {
         this.initMessages();
       }
     }
   }
 
-  ngAfterViewChecked() {
-    if(!this.editingMessage && !this.replyingToMessage) {
+  ngAfterViewInit() {
+    this.messagesListContainer.nativeElement.addEventListener('scroll', this.onMessagesListScroll.bind(this));
+
+    setTimeout(() => {
       this.scrollToBottom();
-    }
+    }, 200);
+  }
+
+  setUpWebsocket() {
+    this.websocketService.connect();
+    this.websocketService.messageSentSubject.subscribe((m: string) => {
+      const messageJson = JSON.parse(m);
+      const id: number = messageJson.id;
+      const date: Date = messageJson.date;
+      const lastEditTime: Date = messageJson.lastEditTime;
+      
+      if (date == lastEditTime) {
+        //new message or reply message
+        const message: Message = new Message();
+        message.id = id;
+        message.parentMessageId = messageJson.parentMessageId;
+        message.body = messageJson.body;
+        message.author = messageJson.author;
+        message.date = date;
+        message.lastEditTime = lastEditTime;
+        message.channelId = messageJson.channelId;
+        message.attachment = messageJson.attachment;
+
+        if (message.channelId === this.channel.id) {
+          this.messages.push(message);
+          if (message.author === this.authorRegistered) {
+            setTimeout(() => {
+              this.scrollToBottom();
+            }, 200)
+          }
+          else {
+            this.receivedMessagesFromCurrentChannel++;
+          }
+        }
+        else {
+          this.receivedMessageFromOtherChannelEvent.emit(message.channelId);
+        }
+      }
+      else {
+        //edit message
+        const message: Message | null = this.getMessageById(id);
+        if(message != null) {
+          message.body = messageJson.body;
+          message.lastEditTime = lastEditTime;
+        }
+      }
+    });
   }
 
   initMessages() {
@@ -74,9 +125,7 @@ export class MessagesListComponent {
         }
 
         this.sortMessagesByDate();
-
         this.filteredMessages = this.messages;
-
       }, (error) => {
         console.error('Error:', error);
       });
@@ -86,8 +135,8 @@ export class MessagesListComponent {
     this.messages.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  onSearchMessages(searchInput : string) {
-    if(searchInput === "") {
+  onSearchMessages(searchInput: string) {
+    if (searchInput === "") {
       this.filteredMessages = this.messages;
       return;
     }
@@ -95,36 +144,39 @@ export class MessagesListComponent {
     searchInput = searchInput.toLowerCase();
 
     this.filteredMessages = this.messages
-      .filter(message => message.author != null && message.author.toLowerCase().includes(searchInput) 
-        || message.body != null && message.body.toLowerCase().includes(searchInput));  
+      .filter(message => message.author != null && message.author.toLowerCase().includes(searchInput)
+        || message.body != null && message.body.toLowerCase().includes(searchInput));
   }
 
   scrollToBottom() {
-    if(this.messagesList != null) {
-      this.messagesList.nativeElement.scrollTop = this.messagesList.nativeElement.scrollHeight;
+    if (this.messagesListContainer != null) {
+      this.messagesListContainer.nativeElement.scrollTop = this.messagesListContainer.nativeElement.scrollHeight;
     }
   }
 
-  onEditingMessage(editing: boolean) {
-    this.editingMessage = editing;
-  }
-
-  onReplyingToMessage(replying: boolean) {
-    this.replyingToMessage = replying;
-  }
-
   getMessageById(id: number | null) {
-    if(id == null) {
+    if (id == null) {
       return null;
     }
 
     const message: Message | undefined = this.messages.find(message => message.id === id);
-    
-    if(message == undefined) {
+
+    if (message == undefined) {
       return null;
     }
 
     return message;
+  }
+
+  onMessagesListScroll() {
+    const scrollTop = this.messagesListContainer.nativeElement.scrollTop;
+    const scrollHeight = this.messagesListContainer.nativeElement.scrollHeight;
+    const offsetHeight = this.messagesListContainer.nativeElement.offsetHeight;
+
+    if (Math.ceil(scrollTop + offsetHeight) >= scrollHeight) {
+      //reached bottom of scroll page
+      this.receivedMessagesFromCurrentChannel = 0;
+    }
   }
 }
 

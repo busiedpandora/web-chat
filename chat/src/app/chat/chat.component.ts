@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ChannelsListComponent } from '../channels-list/channels-list.component'
 import { CommonModule } from '@angular/common';
 import { MessagesListComponent } from '../messages-list/messages-list.component'
@@ -6,6 +6,7 @@ import { Channel } from '../channel';
 import { Input } from '@angular/core';
 import { SendMessageComponent } from '../send-message/send-message.component';
 import { SearchMessageComponent } from '../search-message/search-message.component';
+import { AppConfig } from '../../config';
 
 @Component({
   selector: 'app-chat',
@@ -16,18 +17,34 @@ import { SearchMessageComponent } from '../search-message/search-message.compone
 })
 export class ChatComponent {
   title = 'chat';
+  apiKey: string;
   selectedChannel: Channel;
   @Input() url: string
   @Input() showChannelsList: boolean;
   @Input() showSearchBar: boolean;
   @Input() author: string;
+  @ViewChild(ChannelsListComponent) channelsListComponent: ChannelsListComponent;
+  @ViewChild(MessagesListComponent) messagesListComponent: MessagesListComponent;
+  
 
+  constructor() {}
+
+  ngOnInit() {
+    this.apiKey = AppConfig.apiKey;
+  }
 
   onChannelSelected(channel : Channel){
     this.selectedChannel = channel;
+    setTimeout(() => {
+      this.messagesListComponent.scrollToBottom();
+    }, 200)
   }
 
-  onChannelsLoaded(showChannelsList : boolean) {
-    this.showChannelsList = showChannelsList;
+  onChannelsLoaded(length : number) {
+    this.showChannelsList = length > 1;
+  }
+
+  onReceivedMessageFromOtherChannel(channelId: number) {
+    this.channelsListComponent.increaseNumberOfUnreadMessagesInChannel(channelId);
   }
 }
