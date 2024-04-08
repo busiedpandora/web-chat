@@ -20,7 +20,7 @@
     <div class="border border-1 my-2"></div>
     <span *ngIf="message.date == message.lastEditTime" class="text-secondary">{{formatDate(message.date)}}
     </span>
-    <span *ngIf="message.date != message.lastEditTime" class="text-secondary">Edited {{formatDate(message.date)}}
+    <span *ngIf="message.date != message.lastEditTime" class="text-secondary">Edited {{formatDate(message.lastEditTime)}}
     </span>
     <div class="border border-1 my-2"></div>
     <div *ngIf="onReply">

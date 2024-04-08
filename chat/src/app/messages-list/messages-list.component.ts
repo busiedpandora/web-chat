@@ -64,7 +64,7 @@ export class MessagesListComponent {
       const lastEditTime: Date = messageJson.lastEditTime;
       
       if (date == lastEditTime) {
-        console.log("date == lastEditTime")
+        //new message or reply message
         const message: Message = new Message();
         message.id = id;
         message.parentMessageId = messageJson.parentMessageId;
@@ -73,7 +73,7 @@ export class MessagesListComponent {
         message.date = date;
         message.lastEditTime = lastEditTime;
         message.channelId = messageJson.channelId;
-        //message.attachment = messageJson.attachment;
+        message.attachment = messageJson.attachment;
 
         if (message.channelId === this.channel.id) {
           this.messages.push(message);
@@ -91,7 +91,7 @@ export class MessagesListComponent {
         }
       }
       else {
-        console.log("date != lastEditTime")
+        //edit message
         const message: Message | null = this.getMessageById(id);
         if(message != null) {
           message.body = messageJson.body;

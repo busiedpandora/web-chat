@@ -74,8 +74,6 @@ export class MessageComponent {
         console.log('Message edited: ' + data);
         this.onEdit = false;
 
-        const currentDate: Date = new Date();
-
         const message = {
           id: data.id,
           body: data.body,
@@ -83,8 +81,8 @@ export class MessageComponent {
           channelId: data.channelId,
           date: data.date,
           lastEditTime: data.lastEditTime,
-          parentMessageId: data.parentMessageId
-
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
         }
 
         this.websocketService.sendMessage('update-message', JSON.stringify(message));
@@ -135,7 +133,8 @@ export class MessageComponent {
           channelId: data.channelId,
           date: data.date,
           lastEditTime: data.lastEditTime,
-          parentMessageId: data.parentMessageId
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
         }
     
         this.websocketService.sendMessage('new-message', JSON.stringify(message));

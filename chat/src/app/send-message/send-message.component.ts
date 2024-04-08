@@ -57,7 +57,8 @@ export class SendMessageComponent {
           channelId: data.channelId,
           date: data.date,
           lastEditTime: data.lastEditTime,
-          parentMessageId: data.parentMessageId
+          parentMessageId: data.parentMessageId,
+          attachment: data.attachment
         }
     
         this.websocketService.sendMessage('new-message', JSON.stringify(message));
