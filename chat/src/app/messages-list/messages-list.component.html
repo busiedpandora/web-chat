@@ -1,7 +1,17 @@
 <div id="messagesListContainer" class="position-relative">
-    <h1 id="channelName" class="text-center text-primary">{{channel != null ? channel.name : ''}}</h1>
-
-    <app-search-message *ngIf="showSearchBar" [channel]="channel" (searchMessagesEvent)="onSearchMessages($event)"></app-search-message>
+    <div id="ChannelHeader" class="d-flex align-items-center">
+        <div id="showChannelButtonContainer">
+            <button class="btn btn-outline-primary ms-2" (click)="toggleChannels()">{{channelsShown ? 'Hide channels' : 'Show channels'}}</button>
+        </div>
+        <div class="flex-fill">
+            <h1 id="channelName" class="text-center text-primary">{{channel != null ? channel.name : ''}}</h1>
+        </div>
+        <div id="showSearchBarButtonContainer">
+            <button class="btn btn-outline-primary me-2" (click)="toggleSearchBar()">{{searchBarShown ? 'Hide search bar' : 'Show search bar'}}</button>
+        </div>
+    </div>
+    
+    <app-search-message *ngIf="searchBarShown" [channel]="channel" (searchMessagesEvent)="onSearchMessages($event)"></app-search-message>
     
     <div id="messagesList" #messagesListContainer>
         <ul>

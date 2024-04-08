@@ -25,10 +25,12 @@ export class MessagesListComponent {
   messages: Message[] = [];
   filteredMessages: Message[] = [];
   @Input() authorRegistered: string;
-  @Input() showSearchBar: boolean;
+  @Input() searchBarShown: boolean;
   @ViewChild('messagesListContainer') messagesListContainer: ElementRef;
   @Output() receivedMessageFromOtherChannelEvent = new EventEmitter<number>();
   receivedMessagesFromCurrentChannel: number = 0;
+  @Input() channelsShown: boolean;
+  @Output() toggleChannelsEvent = new EventEmitter<boolean>();
 
 
   constructor(private http: HttpClient, private websocketService: WebsocketService) { }
@@ -177,6 +179,15 @@ export class MessagesListComponent {
       //reached bottom of scroll page
       this.receivedMessagesFromCurrentChannel = 0;
     }
+  }
+
+  toggleChannels() {
+    this.channelsShown = !this.channelsShown;
+    this.toggleChannelsEvent.emit(this.channelsShown);
+  }
+
+  toggleSearchBar() {
+    this.searchBarShown = !this.searchBarShown;
   }
 }
 

@@ -6,8 +6,8 @@
       </app-channels-list>
       </div>
       <div class="col">
-        <app-messages-list [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" [showSearchBar]="showSearchBar" 
-          (receivedMessageFromOtherChannelEvent)="onReceivedMessageFromOtherChannel($event)">
+        <app-messages-list [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" [searchBarShown]="showSearchBar" [channelsShown]="showChannelsList"
+          (receivedMessageFromOtherChannelEvent)="onReceivedMessageFromOtherChannel($event)" (toggleChannelsEvent)="onToggleChannels($event)">
       </app-messages-list>
         <app-send-message [url]="url" [channel] = "selectedChannel" [authorRegistered]="author"></app-send-message>
       </div>

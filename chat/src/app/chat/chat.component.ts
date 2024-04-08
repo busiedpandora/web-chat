@@ -41,10 +41,14 @@ export class ChatComponent {
   }
 
   onChannelsLoaded(length : number) {
-    this.showChannelsList = length > 1;
+    //this.showChannelsList = length >= 1;
   }
 
   onReceivedMessageFromOtherChannel(channelId: number) {
     this.channelsListComponent.increaseNumberOfUnreadMessagesInChannel(channelId);
+  }
+
+  onToggleChannels(value: boolean) {
+    this.showChannelsList = value;
   }
 }
