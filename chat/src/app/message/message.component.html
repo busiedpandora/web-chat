@@ -12,10 +12,20 @@
     <span class="ms-3 fs-5 fw-semibold text-primary">{{message.author}}</span>
     <div class="border border-1 my-2"></div>
     <div *ngIf="!onEdit">
-        <span>{{message.body}}</span>
+        <div [innerHTML]="generateMessageBody(message.body)"></div>
     </div>
     <div *ngIf="onEdit">
         <input type="text" class="form-control" [(ngModel)]="editedMessage">
+    </div>
+    <div *ngIf="hasLink">
+        <div class="d-flex mt-2">
+            <div *ngIf="linkImageUrl != ''">
+                <img [src]="linkImageUrl" alt="link image" height="100" width="100">
+            </div>
+            <div class="ms-2">
+                <span>{{linkTitle}}</span>
+            </div>
+        </div>
     </div>
     <div class="border border-1 my-2"></div>
     <div>

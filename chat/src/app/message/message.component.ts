@@ -1,7 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
 import { Message } from '../message';
 import { Input } from '@angular/core';
-import { Output } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -10,6 +9,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { WebsocketService } from '../websocket.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import * as cheerio from 'cheerio';
 
 @Component({
   selector: 'app-message',
@@ -30,11 +31,19 @@ export class MessageComponent {
   @Input() parentMessage: Message | null = null;
   @ViewChild('attachment') attachment!: ElementRef<HTMLInputElement>;
 
+  hasLink: boolean = false;
+  linkTitle: string = "";
+  linkImageUrl: string = "";
 
-  constructor(private http: HttpClient, private websocketService: WebsocketService) {}
+
+  constructor(private http: HttpClient, private websocketService: WebsocketService, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.apiKey = AppConfig.apiKey;
+  }
+
+  ngAfterViewInit() {
+    this.setLinkInfo();
   }
 
   formatDate(date : Date) {
@@ -75,6 +84,8 @@ export class MessageComponent {
       next: (data: any) => {
         console.log('Message edited: ' + data);
         this.onEdit = false;
+
+        this.setLinkInfo();
 
         const message = {
           id: data.id,
@@ -143,6 +154,44 @@ export class MessageComponent {
       },
       error: error => {
         console.error('There was an error!', error);
+      }
+    });
+  }
+
+  generateMessageBody(messageBody: string) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const replacedBody = messageBody.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+
+    return replacedBody;
+  }
+
+  setLinkInfo() {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const hasLinksMatch = this.message.body.match(urlRegex);
+
+    if(!hasLinksMatch) {
+      this.hasLink = false;
+      this.linkTitle = "";
+      this.linkImageUrl = "";
+      return;
+    }
+
+    const link = hasLinksMatch[0];
+    this.http.get(link, {responseType: "text"}).subscribe(response => {
+      const $ = cheerio.load(response);
+      const title = $('meta[property="og:title"]').attr('content');
+      const imageUrl = $('meta[property="og:image"]').attr('content');
+
+      console.log("Title:", title);
+      console.log("Image URL:", imageUrl);
+
+      this.hasLink = true;
+
+      if(title) {
+        this.linkTitle = title;
+      }
+      if(imageUrl) {
+        this.linkImageUrl = imageUrl;
       }
     });
   }
