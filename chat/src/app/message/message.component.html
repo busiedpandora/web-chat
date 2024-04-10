@@ -17,7 +17,7 @@
         <div [innerHTML]="generateMessageBody(message.body)"></div>
     </div>
     <div *ngIf="onEdit">
-        <input type="text" class="form-control" [(ngModel)]="editedMessage">
+        <input type="text" class="form-control" [(ngModel)]="editedMessage" autocomplete="off">
     </div>
     <div *ngIf="hasLink">
         <div class="d-flex mt-2">
@@ -39,7 +39,7 @@
     </div>
     <div class="border border-1 my-2"></div>
     <div *ngIf="onReply">
-        <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage">
+        <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage" autocomplete="off">
         <input #attachment type="file" class="form-control mb-2" name="attachment">
     </div>
     <div class="d-flex justify-content-between">
