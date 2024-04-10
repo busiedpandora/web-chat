@@ -1,0 +1,16 @@
+<div class="container-fluid">
+    <div class="row">
+      <div [ngClass]="showChannelsList ? 'col-2' : ''">
+        <app-channels-list [url]="url" [showChannelsList]="showChannelsList" 
+          (selectChannelEvent) = "onChannelSelected($event)" (channelsLoadedEvent)="onChannelsLoaded($event)">
+      </app-channels-list>
+      </div>
+      <div class="col">
+        <app-messages-list [url]="url" [channel] = "selectedChannel" [authorRegistered]="author" [searchBarShown]="showSearchBar" [channelsShown]="showChannelsList"
+          (receivedMessageFromOtherChannelEvent)="onReceivedMessageFromOtherChannel($event)" (toggleChannelsEvent)="onToggleChannels($event)"
+          (messageFromListClickedEvent)="onMessageInChatClick($event)">
+      </app-messages-list>
+        <app-send-message [url]="url" [channel] = "selectedChannel" [authorRegistered]="author"></app-send-message>
+      </div>
+    </div>
+  </div>

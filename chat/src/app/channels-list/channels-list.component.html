@@ -1,0 +1,17 @@
+<div *ngIf="showChannelsList" id="channelsListContainer">
+    <h1>Channels</h1>
+
+    <ul>
+        <li *ngFor="let channel of channels">
+            <button (click)="onSelect(channel)"
+                class="btn btn-outline-primary rounded-0 border-start-0 border-end-0 col-12"
+                [ngClass]="channel.selected ? 'active' : ''">
+                <span class="fs-3">{{channel.name}} </span>
+                <span *ngIf="channel.id != selectedChannel?.id && getNumberOfUnreadMessagesInChannel(channel.id) != 0" 
+                    class="fs-3 text-white bg-danger rounded-3 p-1">
+                    {{getNumberOfUnreadMessagesInChannel(channel.id)}}
+                </span>
+            </button>
+        </li>
+    </ul>
+</div>

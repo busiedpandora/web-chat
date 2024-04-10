@@ -1,0 +1,18 @@
+<div id="sendMessageContainer" class="my-3">
+    <div class="row">
+        <div class="col-10">
+            <input #messageText type="text" class="form-control" name="message.body"
+                placeholder="Type here your message" autocomplete="off">
+        </div>
+        <div class="col">
+            <button class="btn btn-primary col-8" type="submit"
+                (click)="sendMessage(messageText, attachment.files)">Send</button>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-5">
+            <input #attachment type="file" class="form-control" name="attachment">
+        </div>
+    </div>
+</div>

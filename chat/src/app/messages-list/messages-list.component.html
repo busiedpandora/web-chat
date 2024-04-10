@@ -1,0 +1,37 @@
+<div id="messagesListContainer" class="position-relative">
+    <div id="ChannelHeader" class="d-flex align-items-center">
+        <div id="showChannelButtonContainer">
+            <button class="btn btn-outline-primary ms-2" (click)="toggleChannels()">{{channelsShown ? 'Hide channels' : 'Show channels'}}</button>
+        </div>
+        <div class="flex-fill">
+            <h1 id="channelName" class="text-center text-primary">{{channel != null ? channel.name : ''}}</h1>
+        </div>
+        <div id="showSearchBarButtonContainer">
+            <button class="btn btn-outline-primary me-2" (click)="toggleSearchBar()">{{searchBarShown ? 'Hide search bar' : 'Show search bar'}}</button>
+        </div>
+    </div>
+    
+    <app-search-message *ngIf="searchBarShown" [channel]="channel" (searchMessagesEvent)="onSearchMessages($event)"></app-search-message>
+    
+    <div id="messagesList" #messagesListContainer>
+        <ul>
+            <div *ngFor="let message of filteredMessages">
+                <li class="d-flex"
+                [ngClass]="authorRegistered === message.author ? 'justify-content-end' : 'justify-content-start'">
+                    <div class="col-4">
+                        <app-message [url]="url" [message] = message [authorRegistered]="authorRegistered" [parentMessage]="getMessageById(message.parentMessageId)"
+                            (messageClickedEvent)="onMessageFromListClick($event)">
+                        </app-message>
+                    </div>
+                </li>
+            </div>
+        </ul>
+    </div>
+
+    <span *ngIf="receivedMessagesFromCurrentChannel == 1" class="position-absolute bottom-0 start-50 translate-middle badge rounded-pill text-bg-danger fs-6">
+       {{receivedMessagesFromCurrentChannel}} new message
+    </span>
+    <span *ngIf="receivedMessagesFromCurrentChannel > 1" class="position-absolute bottom-0 start-50 translate-middle badge rounded-pill text-bg-danger fs-6">
+        {{receivedMessagesFromCurrentChannel}} new messages
+     </span>
+</div>

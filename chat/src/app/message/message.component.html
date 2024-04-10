@@ -1,0 +1,67 @@
+<div class="border border-3 rounded-2 p-2 my-3">
+    <div *ngIf="parentMessage != null">
+        <img src="./../../../assets/images/reply.svg" class="mb-1 me-1" alt="reply icon" width="18" height="18">
+        <span>In response to </span>
+        <span class="text-primary">{{parentMessage.author}}</span>
+        <span>:</span>
+        <br>
+        <span class="bg-secondary-subtle">{{parentMessage.body}}</span>
+        <div class="border border-1 my-2"></div>
+    </div>
+    <div (click)="onMessageClick(message)">
+        <img src="./../../../assets/images/person-workspace.svg" alt="user icon" width="22" height="22">
+        <span class="ms-3 fs-5 fw-semibold text-primary">{{message.author}}</span>
+    </div>
+    <div class="border border-1 my-2"></div>
+    <div *ngIf="!onEdit">
+        <div [innerHTML]="generateMessageBody(message.body)"></div>
+    </div>
+    <div *ngIf="onEdit">
+        <input type="text" class="form-control" [(ngModel)]="editedMessage" autocomplete="off">
+    </div>
+    <div *ngIf="hasLink">
+        <div class="d-flex mt-2">
+            <div *ngIf="linkImageUrl != ''">
+                <img [src]="linkImageUrl" alt="link image" height="100" width="100">
+            </div>
+            <div class="ms-2">
+                <span>{{linkTitle}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="border border-1 my-2"></div>
+    <div>
+        <span *ngIf="message.date == message.lastEditTime" class="text-secondary">{{formatDate(message.date)}}</span>
+        <div *ngIf="message.date != message.lastEditTime" class="text-secondary">
+            <span class="text-info fw-bold">Edited </span>
+            <span class="text-secondary">{{formatDate(message.lastEditTime)}}</span>
+        </div>
+    </div>
+    <div class="border border-1 my-2"></div>
+    <div *ngIf="onReply">
+        <input type="text" class="form-control mb-2" [(ngModel)]="repliedMessage" autocomplete="off">
+        <input #attachment type="file" class="form-control mb-2" name="attachment">
+    </div>
+    <div class="d-flex justify-content-between">
+        <div>
+            <button *ngIf="message.author!=authorRegistered && !onReply" class="btn btn-outline-primary" (click)="replyToMessage()" type="button">
+                <img src="./../../../assets/images/reply-fill.svg" class="mb-1 me-1" alt="reply icon" width="22" height="22">
+                Reply
+            </button>
+            <button *ngIf="message.author!=authorRegistered && onReply" class="btn btn-outline-primary" (click)="saveReply()" type="button">
+                <img src="./../../../assets/images/send-fill.svg" class="mb-1 me-1" alt="reply icon" width="22" height="22">
+                Send reply
+            </button>
+        </div>
+        <div>
+            <button *ngIf="message.author==authorRegistered && !onEdit" class="btn btn-outline-primary" (click)="editMessage()" type="button">
+                <img src="./../../../assets/images/gear-fill.svg" class="mb-1 me-1" alt="modify icon" width="22" height="22">
+                Modify
+            </button>
+            <button *ngIf="message.author==authorRegistered && onEdit" class="btn btn-outline-primary" (click)="saveEdit()" type="button">
+                <img src="./../../../assets/images/save-fill.svg" class="mb-1 me-1" alt="save icon" width="22" height="22">
+                Save
+            </button>
+        </div>
+    </div>
+</div>
