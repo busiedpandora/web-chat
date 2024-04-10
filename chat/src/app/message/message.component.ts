@@ -183,9 +183,6 @@ export class MessageComponent {
       const title = $('meta[property="og:title"]').attr('content');
       const imageUrl = $('meta[property="og:image"]').attr('content');
 
-      console.log("Title:", title);
-      console.log("Image URL:", imageUrl);
-
       this.hasLink = true;
 
       if(title) {

@@ -39,7 +39,6 @@ export class ChannelsListComponent {
     this.http.get(this.url + 'channels')
       .subscribe((response: any) => {
         const channelsJson : any[] = response;
-        
         for(let i = 0; i < channelsJson.length; i++) {
           const channelJson : any = channelsJson[i];
 

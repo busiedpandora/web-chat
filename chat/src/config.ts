@@ -1,3 +1,3 @@
 export const AppConfig = {
-    apiKey: 'Giamboni_Ibrahim_3'
+    apiKey: 'Giamboni_Ibrahim_Demo'
   };
